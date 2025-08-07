@@ -220,8 +220,23 @@
                 <div id="snake-game" class="game-container" style="display:none">
                     <canvas id="snake-canvas" width="320" height="320" style="background:#222;display:block;margin:0 auto;border-radius:10px;"></canvas>
                     <div id="snake-score" class="snake-score">Score: 0</div>
+                    
+                    <!-- Mobile Controls for Snake -->
+                    <div class="mobile-controls" style="display:none;">
+                        <div class="control-row">
+                            <button class="mobile-btn" id="snake-up">↑</button>
+                        </div>
+                        <div class="control-row">
+                            <button class="mobile-btn" id="snake-left">←</button>
+                            <button class="mobile-btn" id="snake-right">→</button>
+                        </div>
+                        <div class="control-row">
+                            <button class="mobile-btn" id="snake-down">↓</button>
+                        </div>
+                    </div>
+                    
                     <button id="snake-reset" class="btn">Restart</button>
-                    <div class="snake-instructions">Use arrow keys to play!</div>
+                    <div class="snake-instructions">Use arrow keys or mobile buttons to play!</div>
                 </div>
                 <div id="tetris-game" class="game-container" style="display:none">
                     <div class="tetris-ui">
@@ -247,6 +262,23 @@
                         </div>
                         <canvas id="tetris-canvas" width="300" height="600"></canvas>
                     </div>
+                    
+                    <!-- Mobile Controls for Tetris -->
+                    <div class="mobile-controls tetris-mobile-controls" style="display:none;">
+                        <div class="control-row">
+                            <button class="mobile-btn" id="tetris-rotate">🔄</button>
+                            <button class="mobile-btn" id="tetris-up">↑</button>
+                        </div>
+                        <div class="control-row">
+                            <button class="mobile-btn" id="tetris-left">←</button>
+                            <button class="mobile-btn" id="tetris-down">↓</button>
+                            <button class="mobile-btn" id="tetris-right">→</button>
+                        </div>
+                        <div class="control-row">
+                            <button class="mobile-btn" id="tetris-drop">💥</button>
+                        </div>
+                    </div>
+                    
                     <button id="tetris-reset" class="btn">New Game</button>
                     <div class="tetris-instructions">
                         Arrow keys: Move/Rotate • Space: Drop • P: Pause
@@ -419,8 +451,23 @@
                     <div class="pacman-container">
                         <canvas id="pacman-canvas" width="700" height="600"></canvas>
                     </div>
+                    
+                    <!-- Mobile Controls for Pac-Man -->
+                    <div class="mobile-controls" style="display:none;">
+                        <div class="control-row">
+                            <button class="mobile-btn" id="pacman-up">↑</button>
+                        </div>
+                        <div class="control-row">
+                            <button class="mobile-btn" id="pacman-left">←</button>
+                            <button class="mobile-btn" id="pacman-right">→</button>
+                        </div>
+                        <div class="control-row">
+                            <button class="mobile-btn" id="pacman-down">↓</button>
+                        </div>
+                    </div>
+                    
                     <div class="pacman-instructions">
-                        � Arrow Keys to Move • Eat all sparkling dots to win • Avoid the colorful ghosts or lose a life!
+                        🎮 Arrow Keys to Move • Eat all sparkling dots to win • Avoid the colorful ghosts or lose a life!
                     </div>
                 </div>
 
@@ -4051,40 +4098,42 @@
     const COLS = 35;
     
     // Pac-Man maze layout (1 = wall, 0 = dot, 2 = power pellet, 3 = empty)
+    // Fixed maze to ensure all dots are accessible to Pac-Man
     const pacmanMaze = [
         [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,1,1,1,1,0,1,1,1,1,1,1,0,1,1,0,1,0,1,1,0,1,1,1,1,1,1,0,1,1,1,1,0,1],
-        [1,2,1,1,1,1,0,1,1,1,1,1,1,0,1,1,0,1,0,1,1,0,1,1,1,1,1,1,0,1,1,1,1,2,1],
         [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,0,1,0,1],
-        [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,1],
-        [1,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,0,1,0,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1,1],
-        [0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0],
+        [1,0,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,0,1,0,1],
+        [1,2,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,2,1,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,1,1,1,1,0,1,1,0,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,0,1,1,0,1,1,1,1,0,1],
+        [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
+        [1,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1,1],
+        [3,3,3,3,3,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,3,3,3,3,3,3],
         [1,1,1,1,1,1,0,1,1,0,1,1,1,3,3,3,3,3,3,3,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1],
-        [0,0,0,0,0,0,0,0,0,0,1,3,3,3,3,3,3,3,3,3,3,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [3,3,3,3,3,3,0,0,0,0,1,3,3,3,3,3,3,3,3,3,3,1,0,0,0,0,0,3,3,3,3,3,3,3,3],
         [1,1,1,1,1,1,0,1,1,0,1,3,3,3,3,3,3,3,3,3,3,1,0,1,1,0,1,1,1,1,1,1,1,1,1],
-        [0,0,0,0,0,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,0,0,0,0,0,0,0,0],
+        [3,3,3,3,3,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,3,3,3,3,3,3,3,3],
         [1,1,1,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,1,1,1,1,1,1],
         [1,0,0,0,0,0,0,0,0,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1],
         [1,0,1,1,1,1,0,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,1,0,1,1,1,1,0,1,0,1],
-        [1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,1],
-        [1,1,1,0,1,1,0,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,1,0,1,1,0,1,1,1,0,1],
-        [1,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,1],
+        [1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,1],
+        [1,1,1,0,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1],
+        [1,0,0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1],
         [1,0,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,0,1,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
-        [1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1,1,0,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,1,1,0,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,1,1,0,1,1,0,1,1,0,1],
-        [1,0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,0,1,1,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,0,1,1,0,1],
+        [1,0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1],
         [1,1,0,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,0,1,1,0,1,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,2,1,1,1,1,0,1,1,1,1,1,1,0,1,1,0,1,0,1,1,0,1,1,1,1,1,1,0,1,1,1,1,2,1],
-        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,2,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,2,1,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
         [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
     ];
     
     // Create a deep copy of the original maze for resetting
+    // This ensures all dots are always accessible on every level
     const originalPacmanMaze = pacmanMaze.map(row => [...row]);
     
     // Pac-Man player object
@@ -4106,6 +4155,54 @@
     
     let gameSpeed = 0;
     
+    function validateMazeAccessibility() {
+        // Ensure all dots and power pellets are accessible from Pac-Man's starting position
+        // This function checks that every dot can be reached via pathfinding
+        const visited = Array(ROWS).fill().map(() => Array(COLS).fill(false));
+        const queue = [{x: 17, y: 26}]; // Pac-Man's starting position
+        
+        visited[26][17] = true;
+        
+        // Breadth-first search to find all reachable cells
+        while (queue.length > 0) {
+            const {x, y} = queue.shift();
+            
+            // Check all 4 directions
+            const directions = [{x:0,y:-1}, {x:1,y:0}, {x:0,y:1}, {x:-1,y:0}];
+            
+            for (const dir of directions) {
+                const newX = x + dir.x;
+                const newY = y + dir.y;
+                
+                // Handle tunnel wrapping
+                const wrappedX = newX < 0 ? COLS - 1 : newX >= COLS ? 0 : newX;
+                
+                if (newY >= 0 && newY < ROWS && 
+                    !visited[newY][wrappedX] && 
+                    pacmanMaze[newY][wrappedX] !== 1) { // Not a wall
+                    
+                    visited[newY][wrappedX] = true;
+                    queue.push({x: wrappedX, y: newY});
+                }
+            }
+        }
+        
+        // Remove any dots or power pellets that are not accessible
+        let dotsRemoved = 0;
+        for (let y = 0; y < ROWS; y++) {
+            for (let x = 0; x < COLS; x++) {
+                if ((pacmanMaze[y][x] === 0 || pacmanMaze[y][x] === 2) && !visited[y][x]) {
+                    pacmanMaze[y][x] = 3; // Change to empty space
+                    originalPacmanMaze[y][x] = 3; // Also update original
+                    dotsRemoved++;
+                }
+            }
+        }
+        
+        console.log(`Maze validation complete. Removed ${dotsRemoved} inaccessible dots.`);
+        return dotsRemoved;
+    }
+    
     function pacmanInit() {
         pacmanGame.running = false;
         pacmanGame.paused = false;
@@ -4122,16 +4219,20 @@
             }
         }
         
-        // Calculate total dots in maze
+        // Validate maze accessibility and remove blocked dots
+        validateMazeAccessibility();
+        
+        // Calculate total dots in maze after validation
         let totalDots = 0;
         for (let y = 0; y < ROWS; y++) {
             for (let x = 0; x < COLS; x++) {
-                if (originalPacmanMaze[y][x] === 0 || originalPacmanMaze[y][x] === 2) {
+                if (pacmanMaze[y][x] === 0 || pacmanMaze[y][x] === 2) {
                     totalDots++;
                 }
             }
         }
         pacmanGame.totalDots = totalDots;
+        console.log(`Total accessible dots: ${totalDots}`);
         
         // Reset Pac-Man position
         pacman.x = 17;
@@ -4412,6 +4513,20 @@
             }
         }
         
+        // Ensure accessibility (should already be validated but double-check)
+        validateMazeAccessibility();
+        
+        // Recalculate total dots after validation
+        let totalDots = 0;
+        for (let y = 0; y < ROWS; y++) {
+            for (let x = 0; x < COLS; x++) {
+                if (pacmanMaze[y][x] === 0 || pacmanMaze[y][x] === 2) {
+                    totalDots++;
+                }
+            }
+        }
+        pacmanGame.totalDots = totalDots;
+        
         pacmanGame.dotsEaten = 0;
         resetPositions();
         updatePacmanDisplay();
@@ -4646,6 +4761,128 @@
         }
     });
     
+    // --- Mobile Detection and Controls ---
+    function isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+               (window.innerWidth <= 768);
+    }
+
+    function showMobileControls() {
+        if (isMobileDevice()) {
+            const mobileControls = document.querySelectorAll('.mobile-controls');
+            mobileControls.forEach(control => {
+                control.style.display = 'block';
+            });
+        }
+    }
+
+    // Show mobile controls when games are opened
+    document.addEventListener('DOMContentLoaded', function() {
+        showMobileControls();
+        
+        // Add mobile control event listeners for Snake
+        if (document.getElementById('snake-up')) {
+            document.getElementById('snake-up').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                simulateKeyPress('ArrowUp');
+            });
+            document.getElementById('snake-down').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                simulateKeyPress('ArrowDown');
+            });
+            document.getElementById('snake-left').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                simulateKeyPress('ArrowLeft');
+            });
+            document.getElementById('snake-right').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                simulateKeyPress('ArrowRight');
+            });
+        }
+        
+        // Add mobile control event listeners for Pac-Man
+        if (document.getElementById('pacman-up')) {
+            document.getElementById('pacman-up').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                simulateKeyPress('ArrowUp');
+            });
+            document.getElementById('pacman-down').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                simulateKeyPress('ArrowDown');
+            });
+            document.getElementById('pacman-left').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                simulateKeyPress('ArrowLeft');
+            });
+            document.getElementById('pacman-right').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                simulateKeyPress('ArrowRight');
+            });
+        }
+        
+        // Add mobile control event listeners for Tetris
+        if (document.getElementById('tetris-left')) {
+            document.getElementById('tetris-left').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                simulateKeyPress('ArrowLeft');
+            });
+            document.getElementById('tetris-right').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                simulateKeyPress('ArrowRight');
+            });
+            document.getElementById('tetris-down').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                simulateKeyPress('ArrowDown');
+            });
+            document.getElementById('tetris-up').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                simulateKeyPress('ArrowUp');
+            });
+            document.getElementById('tetris-rotate').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                simulateKeyPress('ArrowUp');
+            });
+            document.getElementById('tetris-drop').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                simulateKeyPress(' ');
+            });
+        }
+    });
+
+    // Function to simulate keyboard events for mobile controls
+    function simulateKeyPress(keyCode) {
+        const event = new KeyboardEvent('keydown', {
+            key: keyCode,
+            keyCode: getKeyCode(keyCode),
+            which: getKeyCode(keyCode),
+            bubbles: true
+        });
+        document.dispatchEvent(event);
+    }
+
+    function getKeyCode(key) {
+        const keyCodes = {
+            'ArrowUp': 38,
+            'ArrowDown': 40,
+            'ArrowLeft': 37,
+            'ArrowRight': 39,
+            ' ': 32
+        };
+        return keyCodes[key] || 0;
+    }
+
+    // Prevent default touch behaviors on game containers
+    document.addEventListener('touchmove', function(e) {
+        if (e.target.closest('.game-container')) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    // Handle orientation change
+    window.addEventListener('orientationchange', function() {
+        setTimeout(showMobileControls, 100);
+    });
+
     </script>
 </body>
 </html>
